@@ -12,7 +12,7 @@
       /* ---------------- RESET ---------------- */
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       :root{
-        --bg: #07070a;
+        --bg: transparent;;
         --bg-soft:#0b0b0f;
         --card: #0f1115;
         --muted:#9aa0ad;
@@ -40,7 +40,7 @@
         transform: scale(1.04);
       }
       body::after{
-        content:""; position:fixed; inset:0; z-index:-1;
+        content: none; position:fixed; inset:0; z-index:-1;
         background: radial-gradient(600px 300px at 85% 10%, rgba(255,66,122,.06), transparent 20%);
         pointer-events:none;
       }
@@ -249,6 +249,7 @@
         <img src="backgroundmain.jpg" class="eula reveal" alt="main background" />
 
         <div class="hero-meta">
+          
           <div class="static glass lift reveal">
             <p><span>Điểm Được Xếp Hạng</span><span>5.425.728.315</span></p>
             <p><span>Độ Chính Xác</span><span>97,30%</span></p>
