@@ -1,536 +1,1925 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Tống Xuân Định - Top 1 Osu!standard của Thành Phố Nam Định" />
-    <meta name="keywords" content="Tống Xuân Định, Top 1 Nam Định, osu! Nam Định" />
-    <meta name="author" content="Tống Xuân Định" />
-    <title>Tong Xuan Dinh — Animated v5.0 (Optimized)</title>
 
-    <style>
-      /* ---------------- RESET ---------------- */
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      :root{
-        --bg: transparent;
-        --bg-soft:#0b0b0f;
-        --card: #0f1115;
-        --muted:#9aa0ad;
-        --text:#eef2ff;
-        --accent-1:#ff416c;
-        --accent-2:#7b5cff;
-        --glass-alpha: .12;
-        --radius:14px;
-        --shadow-sm: 0 6px 18px rgba(0,0,0,.45);
-        --shadow-lg: 0 20px 60px rgba(0,0,0,.7);
-        --dur: .45s;
-        --ease: cubic-bezier(.2,.8,.2,1);
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tống Xuân Định - Top 1 Osu!standard của Thành Phố Nam Định" />
+  <meta name="keywords" content="Tống Xuân Định, Top 1 Nam Định, osu! Nam Định" />
+  <meta name="author" content="Tống Xuân Định" />
+  <title>Tong Xuan Dinh — 3D Interactive Experience</title>
+
+  <style>
+    /* ---------------- RESET & VARIABLES ---------------- */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-soft: #0b0b0f;
+      --card: #0f1115;
+      --muted: #9aa0ad;
+      --text: #eef2ff;
+      --accent-1: #ff416c;
+      --accent-2: #7b5cff;
+      --accent-3: #00ff8f;
+      --glass-alpha: .15;
+      --radius: 20px;
+      --shadow-sm: 0 8px 32px rgba(0, 0, 0, .4);
+      --shadow-lg: 0 25px 80px rgba(0, 0, 0, .8);
+      --shadow-neon: 0 0 30px rgba(123, 92, 255, .3);
+      --dur: .6s;
+      --ease: cubic-bezier(.23, 1, .32, 1);
+      --bounce: cubic-bezier(.68, -0.55, .265, 1.55);
+    }
+
+    html,
+    body {
+      height: 100%;
+      background: radial-gradient(ellipse at top, rgba(123, 92, 255, .08) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom, rgba(255, 65, 108, .06) 0%, transparent 50%),
+        var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
       }
-      html,body{height:100%; background: radial-gradient(1200px 700px at 10% 10%, rgba(124,92,255,.06), transparent), var(--bg); color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
-      @media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important;} }
+    }
 
-      /* ---------------- GLOBAL BACKDROP (keeps original file name) ---------------- */
-      body::before{
-        content:"";
-        position:fixed; inset:0; z-index:-2;
-        background:
-          linear-gradient(180deg, rgba(3,6,11,.28), rgba(3,6,11,.78)),
-          url("backgroundmain.jpg") center/cover no-repeat;
-        filter: blur(10px) brightness(.55) saturate(.98);
-        transform: scale(1.04);
+    /* ---------------- GLOBAL BACKDROP ---------------- */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(135deg, rgba(3, 6, 11, .4), rgba(15, 17, 21, .6)),
+        url("backgroundmain.jpg") center/cover no-repeat;
+      filter: blur(2px) brightness(.4) saturate(1.2);
+      transform: scale(1.1);
+      animation: slowFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes slowFloat {
+
+      0%,
+      100% {
+        transform: scale(1.1) translateY(0px);
       }
-      body::after{
-        content: none; position:fixed; inset:0; z-index:-1;
-        background: radial-gradient(600px 300px at 85% 10%, rgba(255,66,122,.06), transparent 20%);
-        pointer-events:none;
+
+      50% {
+        transform: scale(1.05) translateY(-10px);
+      }
+    }
+
+    /* ---------------- LAYOUT HELPERS ---------------- */
+    .container {
+      width: min(1200px, 95%);
+      margin: 0 auto;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, var(--glass-alpha));
+      border: 1px solid rgba(255, 255, 255, .08);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .lift-3d {
+      transform-style: preserve-3d;
+      transition: all var(--dur) var(--ease);
+      will-change: transform;
+    }
+
+    .lift-3d:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: var(--shadow-lg), var(--shadow-neon);
+      animation: breathe3D 2s ease-in-out infinite;
+    }
+
+    @keyframes breathe3D {
+
+      0%,
+      100% {
+        transform: translateY(-15px) scale(1.02);
       }
 
-      /* ---------------- LAYOUT HELPERS ---------------- */
-      .container{ width:min(1180px,92%); margin:0 auto; }
-      .stack-24 > * + *{ margin-top:24px; }
-      .stack-16 > * + *{ margin-top:16px; }
-      .glass{ background: rgba(255,255,255,var(--glass-alpha)); border:1px solid rgba(255,255,255,.04); backdrop-filter: blur(8px); border-radius:var(--radius); box-shadow:var(--shadow-sm); }
-      .lift{ transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease); will-change:transform; }
-      .lift:hover{ transform: translateY(-6px); box-shadow: var(--shadow-lg); }
-      .tilt-3d{ transform-style:preserve-3d; transition: transform var(--dur) var(--ease); }
-      .tilt-3d:hover{ transform: perspective(900px) rotateX(6deg) rotateY(-8deg) translateY(-6px); }
-      .reveal{ opacity:0; transform: translateY(14px); animation: reveal var(--dur) var(--ease) forwards; animation-delay: .15s; }
-      @keyframes reveal{ to{ opacity:1; transform:none; } }
-
-      .badge{ display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border-radius:999px; font-size:13px; color:var(--muted); background: rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.03); }
-
-      /* ---------------- HEADER ---------------- */
-      .header{ position:sticky; top:0; z-index:60; padding:8px 0; background:linear-gradient(180deg, rgba(8,9,12,.6), rgba(8,9,12,.35)); backdrop-filter: blur(8px); border-bottom:1px solid rgba(255,255,255,.03); }
-      .nav{ height:64px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
-      .brand{ display:flex; align-items:center; gap:12px; padding:8px 10px; border-radius:10px; }
-      .brand img{ width:36px; height:36px; object-fit:cover; display:block; }
-      .nav ul{ display:flex; gap:8px; list-style:none; align-items:center; }
-      .nav li{ padding:8px 12px; border-radius:10px; color:var(--muted); font-weight:600; cursor:default; }
-      .nav li:hover{ color:var(--text); background: rgba(255,255,255,.02); transform: translateY(-3px); }
-
-      /* ---------------- HERO ---------------- */
-      .hero{ position:relative; }
-      .hero .eula{
-        width:100%; height:clamp(420px,64vh,820px);
-        display:block; object-fit:cover; border-radius:calc(var(--radius) + 6px); box-shadow:var(--shadow-lg);
-        transform-origin:center center; animation: gentlepan 20s linear infinite;
+      50% {
+        transform: translateY(-20px) scale(1.05);
       }
-      @keyframes gentlepan { from{ transform: scale(1.02) translateX(0);} to{ transform: scale(1.07) translateX(-28px);} }
+    }
 
-      .hero-meta{ position:absolute; left:0; right:0; bottom:28px; display:flex; gap:16px; justify-content:space-between; align-items:flex-end; padding:0 22px; flex-wrap:wrap; }
-      .static{ min-width:260px; max-width:720px; padding:18px 20px; background: linear-gradient(180deg, rgba(0,0,0,.5), rgba(0,0,0,.32)); border-radius:12px; border:1px solid rgba(255,255,255,.04); color:var(--muted); }
-      .static p{ display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,.03); }
-      .static p:last-child{ border-bottom:0; }
+    .tilt-extreme {
+      transform-style: preserve-3d;
+      transition: all var(--dur) var(--bounce);
+    }
 
-      .ranked{ display:flex; gap:12px; align-items:center; }
-      .rankedS{ width:220px; padding:14px 12px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.03); text-align:center; }
-      .rankedS h3{ color:var(--muted); font-size:12px; letter-spacing:.14em; }
-      .rankedS h1{ font-size:44px; letter-spacing:.01em; margin-top:6px; color:var(--text); }
+    .tilt-extreme:hover {
+      transform: translateY(-20px) scale(1.05);
+      box-shadow: var(--shadow-lg);
+      animation: wiggle3D 1s ease-in-out infinite;
+    }
 
-      .names{ position:relative; margin-top:12px; display:flex; justify-content:center; align-items:center; padding:12px 18px; border-radius:12px; background: linear-gradient(90deg, rgba(0,0,0,.36), rgba(0,0,0,.14)); border:1px solid rgba(255,255,255,.03); color:var(--text); font-weight:700; }
+    @keyframes wiggle3D {
 
-      /* ---------------- TEAM ---------------- */
-      .team{ padding:72px 0 36px; }
-      .team h1{ text-align:center; font-size:clamp(26px,3.6vw,44px); }
-      .players{ margin-top:24px; display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; }
-      .pls{
-        height:420px; border-radius:var(--radius); overflow:hidden; position:relative;
-        display:flex; align-items:flex-end; justify-content:center; color:var(--text); font-size:20px; font-weight:800; letter-spacing:.02em;
-        text-shadow: 0 6px 22px rgba(0,0,0,.75); border:1px solid rgba(255,255,255,.03);
-        background-position:center; background-size:cover; background-repeat:no-repeat;
-        transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), filter var(--dur) var(--ease);
+      0%,
+      100% {
+        transform: translateY(-20px) scale(1.05);
       }
-      .pls::after{ content:""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.5)); }
-      .pls > *{ position:relative; z-index:2; padding:20px; }
-      .pls:hover{ transform: translateY(-8px) scale(1.02); filter: saturate(1.12); box-shadow: var(--shadow-lg); }
 
-      /* ensure background-image variants still cover */
-      .pls { background-size: cover !important; background-position: center !important; }
-
-      /* ---------------- SEARCH / TABLE ---------------- */
-      .searching{ position:relative; padding:64px 0; }
-      .searching::before{ content:""; position:absolute; inset:0; z-index:-1; background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.12)); }
-      .searching h1{ text-align:center; font-size:clamp(22px,3.6vw,44px); color:var(--text); margin-bottom:18px; }
-      table{ width:min(980px,92%); margin:0 auto; border-collapse:separate; border-spacing:18px; }
-      td{
-        position:relative; overflow:hidden; min-height:110px; border-radius:12px;
-        background: linear-gradient(180deg, rgba(16,16,20,.8), rgba(12,12,14,.6));
-        border:1px solid rgba(255,255,255,.03); padding:14px 16px; display:flex; gap:16px; align-items:center; color:var(--text);
-        transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
-        box-shadow: var(--shadow-sm);
+      25% {
+        transform: translateY(-25px) scale(1.07) rotateZ(2deg);
       }
-      td img{ width:150px; height:80px; object-fit:cover; border-radius:10px; display:block; }
-      td:hover{ transform: translateY(-8px) scale(1.02); box-shadow: var(--shadow-lg); }
 
-      /* ---------------- MEDALS / MODS ---------------- */
-      .point{ padding:64px 0; }
-      .section-title{ text-align:center; font-size:clamp(20px,2.6vw,32px); color:var(--text); }
-      .medal{ margin-top:18px; display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
-      .topmedal{ padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,.03); background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); text-align:center; box-shadow:var(--shadow-sm); }
-      .topmedal img{ width:120px; height:120px; object-fit:cover; display:block; margin:0 auto 10px; }
-
-      .mods{ margin-top:18px; display:grid; grid-template-columns: repeat(5, 1fr); gap:12px; }
-      .topmods{ padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,.03); background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); text-align:center; box-shadow:var(--shadow-sm); }
-      .topmods img{ width:120px; height:120px; object-fit:cover; display:block; margin:0 auto 8px; }
-
-      /* ---------------- MAPS ---------------- */
-      .maps{ padding:64px 0; }
-      .mapart{ margin-top:18px; display:grid; grid-template-columns: 1fr 320px 1fr; gap:16px; align-items:start; }
-      .allmaps, .artist{ border-radius:var(--radius); overflow:hidden; border:1px solid rgba(255,255,255,.03); background: rgba(0,0,0,.22); }
-      .allmaps{ display:flex; flex-direction:column; gap:6px; }
-      .allmaps img{ width:100%; height:50%; object-fit:cover; display:block; }
-      .artist{ padding:18px; color:var(--text); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; min-height:240px; }
-
-      /* ---------------- LAPTOP / MONITOR ---------------- */
-      .lapmon{ padding:40px 0; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-      .laptop, .monitor{ border-radius:var(--radius); overflow:hidden; border:1px solid rgba(255,255,255,.03); background: rgba(255,255,255,.02); }
-      .laptop img, .monitor img{ width:100%; height:320px; object-fit:cover; display:block; transition: transform var(--dur) var(--ease); }
-      .laptop:hover img, .monitor:hover img{ transform: scale(1.04) translateY(-6px); }
-
-      /* ---------------- KEYBOARD / LOW END ---------------- */
-      .keyboard{ padding:64px 0; }
-      .info{ margin-top:16px; display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; align-items:center; }
-      .info img{ width:100%; height:540px; object-fit:cover; border-radius:var(--radius); box-shadow:var(--shadow-lg); display:block; }
-      .lowkb{ margin-top:18px; display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
-      .kb1 img, .kb2 img{ width:100%; height:350px; object-fit:cover; display:block; border-radius:10px; }
-
-      /* ---------------- TABLET ---------------- */
-      .tablet{ padding:64px 0; }
-      .tbinfo{ margin-top:16px; display:grid; grid-template-columns: 1fr .9fr 1fr; gap:18px; align-items:center; }
-      .tbinfo img{ width:100%; height:320px; object-fit:cover; display:block; border-radius:12px; }
-
-      /* ---------------- COUNT / BANNER ---------------- */
-      .count{ padding:36px 0 10px; text-align:center; }
-      .count img{ width:100%; height:62vh; object-fit:cover; display:block; border-radius:var(--radius); box-shadow:var(--shadow-lg); }
-
-      /* ---------------- REGISTER FORM ---------------- */
-      .register-form{ padding:56px 0; }
-      .form{ width:min(760px,92%); margin:0 auto; padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,.03); background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.16)); box-shadow:var(--shadow-sm); }
-      .form-row{ display:grid; grid-template-columns: .9fr 1.1fr; gap:12px; align-items:center; margin-top:10px; }
-      label{ color:var(--muted); text-align:right; padding-right:8px; font-weight:600; }
-      input[type="text"], input[type="password"]{ width:100%; padding:12px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.03); background: rgba(255,255,255,.03); color:var(--text); }
-      input:focus{ outline:none; box-shadow: 0 6px 26px rgba(124,92,255,.12); transform: translateY(-2px); }
-      .btn{ width:100%; margin-top:12px; height:52px; border-radius:12px; border:0; background: linear-gradient(90deg,var(--accent-1),var(--accent-2)); color:white; font-weight:800; cursor:pointer; }
-
-      /* ---------------- OTHER GAMES ---------------- */
-      .game{ padding:56px 0 12px; text-align:center; }
-      .anothergame{ margin-top:16px; display:grid; grid-template-columns: repeat(6, minmax(160px, 1fr)); gap:12px; justify-items:center; }
-      .gms{ width:100%; min-height:240px; border-radius:12px; border:1px solid rgba(255,255,255,.03); background-size:cover; background-position:center; box-shadow:var(--shadow-sm); display:flex; justify-content:center; align-items:flex-end; overflow:hidden; }
-      .gms > .games{ width:100%; padding:10px; display:flex; align-items:center; gap:12px; background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.36)); }
-      .image{ width:72px; height:72px; border-radius:10px; background-size:cover; background-position:center; flex-shrink:0; }
-
-      /* per-child background fallback (kept original background images) */
-      .gms:nth-child(1){ background-image: url('ww1.jpg'); background-size:cover; }
-      .gms:nth-child(2){ background-image: url('ww2.jpg'); background-size:cover; }
-      .gms:nth-child(3){ background-image: url('ww3.jpg'); background-size:cover; }
-      .gms:nth-child(4){ background-image: url('ww4.jpg'); background-size:cover; }
-      .gms:nth-child(5){ background-image: url('ww5.jpg'); background-size:cover; }
-      .gms:nth-child(6){ background-image: url('ww6.webp'); background-size:cover; }
-
-      /* ---------------- FOOTER ---------------- */
-      .ending{ padding:28px 0 80px; }
-      .end{ margin:0 auto; width:min(960px,92%); display:grid; grid-template-columns: auto 1fr 1fr; gap:12px; align-items:center; padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,.03); background: rgba(0,0,0,.28); box-shadow:var(--shadow-sm); }
-      .end img{ width:70px; height:70px; object-fit:cover; }
-      .end span p{ color:var(--muted); font-size:14px; }
-
-      /* ---------------- RESPONSIVE ---------------- */
-      @media (max-width: 1024px){
-        .players{ grid-template-columns: repeat(2, 1fr); }
-        .mods{ grid-template-columns: repeat(3, 1fr); }
-        .mapart{ grid-template-columns: 1fr; }
-        .lapmon{ grid-template-columns: 1fr; }
-        .anothergame{ grid-template-columns: repeat(3, 1fr); }
-        .mapart .artist{ order:2; }
+      75% {
+        transform: translateY(-15px) scale(1.03) rotateZ(-2deg);
       }
-      @media (max-width: 640px){
-        .hero-meta{ position:static; margin-top:-88px; padding:0 8px; display:block; gap:12px; }
-        .ranked{ width:100%; justify-content:space-between; }
-        .nav{ height:auto; padding:10px 0; flex-wrap:wrap; justify-content:center; }
-        .info{ grid-template-columns: 1fr; }
-        .lowkb{ grid-template-columns: 1fr; }
-        .mods{ grid-template-columns: repeat(2, 1fr); }
-        .anothergame{ grid-template-columns: repeat(2, 1fr); }
-        .end{ grid-template-columns: 1fr; text-align:center; }
-        .players{ grid-template-columns: 1fr; }
-      }
-    </style>
-  </head>
+    }
 
-  <body>
-    <!-- ================= HEADER ================= -->
-    <header class="header">
-      <div class="container nav">
-        <div class="brand shine lift">
-          <img class="wobble" src="Osu!_Logo_2016.svg.png" alt="osu logo" />
-          <strong>Tong Xuan Dinh</strong>
+    .float-animation {
+      animation: floatUp 3s ease-in-out infinite;
+    }
+
+    @keyframes floatUp {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .reveal-slide {
+      opacity: 0;
+      transform: translateX(-50px) rotateY(-20deg);
+      animation: revealSlide 1s var(--ease) forwards;
+    }
+
+    @keyframes revealSlide {
+      to {
+        opacity: 1;
+        transform: translateX(0) rotateY(0);
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(123, 92, 255, .2), rgba(255, 65, 108, .2));
+      border: 1px solid rgba(255, 255, 255, .1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ---------------- DYNAMIC HEADER ---------------- */
+    .dynamic-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 80px;
+      background: rgba(10, 10, 15, .95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .nav-container {
+      display: flex;
+      gap: 0;
+      align-items: center;
+      height: 100%;
+    }
+
+    .nav-item {
+      position: relative;
+      height: 100%;
+      padding: 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all var(--dur) var(--ease);
+      border-right: 1px solid rgba(255, 255, 255, .05);
+    }
+
+    .nav-item:last-child {
+      border-right: none;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(123, 92, 255, .1), rgba(255, 65, 108, .1));
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(123, 92, 255, .2);
+    }
+
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+      transition: all var(--dur) var(--ease);
+      transform: translateX(-50%);
+    }
+
+    .nav-item:hover::before {
+      width: 80%;
+    }
+
+    .nav-item.active {
+      color: var(--accent-3);
+      background: rgba(0, 255, 143, .1);
+    }
+
+    .nav-item.active::before {
+      width: 100%;
+      background: var(--accent-3);
+    }
+
+    /* ---------------- SECTIONS CONTAINER ---------------- */
+    .sections-container {
+      margin-top: 80px;
+      position: relative;
+    }
+
+    .section {
+      min-height: 100vh;
+      padding: 60px 0;
+      position: relative;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s var(--ease);
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section.active {
+      z-index: 10;
+    }
+
+    /* ---------------- HERO SECTION ---------------- */
+    .hero-section {
+      position: relative;
+      background: linear-gradient(135deg, rgba(123, 92, 255, .05), rgba(255, 65, 108, .05));
+    }
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 40px;
+      align-items: center;
+      min-height: 80vh;
+    }
+
+    .hero-main {
+      position: relative;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 600px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      transform-origin: center;
+      animation: heroFloat 8s ease-in-out infinite;
+    }
+
+    @keyframes heroFloat {
+
+      0%,
+      100% {
+        transform: scale(1) rotateY(0deg);
+      }
+
+      50% {
+        transform: scale(1.02) rotateY(2deg);
+      }
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, .3), transparent 70%);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent-3), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      animation: titleGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 10px rgba(0, 255, 143, .3));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 20px rgba(0, 255, 143, .6));
+      }
+    }
+
+    .hero-stats {
+      background: rgba(0, 0, 0, .7);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(123, 92, 255, .1), rgba(255, 65, 108, .1));
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, .05);
+      transition: all var(--dur) var(--ease);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: var(--shadow-neon);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--accent-3);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ---------------- TEAM SECTION ---------------- */
+    .team-section {
+      background: linear-gradient(135deg, rgba(255, 65, 108, .03), rgba(123, 92, 255, .03));
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .section-subtitle {
+      font-size: 1.5rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .team-grid {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: nowrap;
+    }
+
+    .team-card {
+      flex: 0 0 250px;
+      min-width: 250px;
+    }
+
+    .team-card {
+      height: 500px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      transition: all var(--dur) var(--ease);
+      cursor: pointer;
+      transform-style: preserve-3d;
+    }
+
+    .team-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .7));
+      transition: all var(--dur) var(--ease);
+    }
+
+    .team-card:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: var(--shadow-lg), 0 0 50px rgba(123, 92, 255, .4);
+      animation: pulse3D 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse3D {
+
+      0%,
+      100% {
+        transform: translateY(-15px) scale(1.05);
+      }
+
+      50% {
+        transform: translateY(-20px) scale(1.08);
+      }
+    }
+
+    .team-card:hover::before {
+      background: linear-gradient(135deg, rgba(123, 92, 255, .3), rgba(255, 65, 108, .3));
+    }
+
+    .team-card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 30px;
+      z-index: 2;
+      transform: translateY(20px);
+      transition: all var(--dur) var(--ease);
+    }
+
+    .team-card:hover .team-card-content {
+      transform: translateY(0);
+    }
+
+    .team-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+      text-shadow: 0 4px 20px rgba(0, 0, 0, .8);
+      margin-bottom: 10px;
+    }
+
+    .team-role {
+      color: var(--accent-3);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ---------------- ACHIEVEMENTS SECTION ---------------- */
+    .achievements-section {
+      background: linear-gradient(135deg, rgba(0, 255, 143, .03), rgba(123, 92, 255, .03));
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      justify-items: center;
+    }
+
+    .achievement-card:nth-child(4) {
+      grid-column: 1 / 3;
+      justify-self: end;
+      margin-right: 50px;
+    }
+
+    .achievement-card:nth-child(5) {
+      grid-column: 2 / 4;
+      justify-self: start;
+      margin-left: 50px;
+    }
+
+    .achievement-card {
+      background: rgba(0, 0, 0, .4);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, .1);
+      padding: 30px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      transition: all var(--dur) var(--ease);
+      transform-style: preserve-3d;
+    }
+
+    .achievement-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 255, 143, .2);
+      background: rgba(0, 255, 143, .1);
+      animation: glow3D 1.5s ease-in-out infinite;
+    }
+
+    @keyframes glow3D {
+
+      0%,
+      100% {
+        box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 255, 143, .2);
+      }
+
+      50% {
+        box-shadow: var(--shadow-lg), 0 0 60px rgba(0, 255, 143, .4);
+      }
+    }
+
+    .achievement-image {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 15px;
+      flex-shrink: 0;
+    }
+
+    .achievement-content {
+      flex: 1;
+    }
+
+    .achievement-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .achievement-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    /* ---------------- MEDALS SECTION ---------------- */
+    .medals-section {
+      background: linear-gradient(135deg, rgba(255, 65, 108, .03), rgba(0, 255, 143, .03));
+    }
+
+    .medals-container {
+      display: grid;
+      gap: 60px;
+    }
+
+    .medals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .medal-card {
+      background: rgba(0, 0, 0, .4);
+      backdrop-filter: blur(20px);
+      padding: 30px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, .1);
+      text-align: center;
+      transition: all var(--dur) var(--ease);
+      transform-style: preserve-3d;
+    }
+
+    .medal-card:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: var(--shadow-lg), 0 0 50px rgba(255, 65, 108, .3);
+      animation: bounce3D 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce3D {
+
+      0%,
+      100% {
+        transform: translateY(-15px) scale(1.05);
+      }
+
+      50% {
+        transform: translateY(-25px) scale(1.08);
+      }
+    }
+
+    .medal-card img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .medal-card:hover img {
+      transform: rotateY(180deg) scale(1.1);
+    }
+
+    .medal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .medal-date {
+      color: var(--accent-3);
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .medal-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .mods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 25px;
+    }
+
+    .mod-card {
+      background: rgba(0, 0, 0, .4);
+      backdrop-filter: blur(20px);
+      padding: 25px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, .1);
+      text-align: center;
+      transition: all var(--dur) var(--ease);
+      transform-style: preserve-3d;
+    }
+
+    .mod-card:hover {
+      transform: translateY(-10px) scale(1.1);
+      box-shadow: var(--shadow-lg), 0 0 30px rgba(123, 92, 255, .4);
+      animation: float3D 2s ease-in-out infinite;
+    }
+
+    @keyframes float3D {
+
+      0%,
+      100% {
+        transform: translateY(-10px) scale(1.1);
+      }
+
+      50% {
+        transform: translateY(-18px) scale(1.15);
+      }
+    }
+
+    .mod-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 15px;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .mod-card:hover img {
+      transform: rotateZ(360deg) scale(1.2);
+    }
+
+    .mod-percentage {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--accent-2);
+      margin-bottom: 10px;
+    }
+
+    .mod-name {
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* ---------------- MAPS SECTION ---------------- */
+    .maps-section {
+      background: linear-gradient(135deg, rgba(123, 92, 255, .03), rgba(0, 255, 143, .03));
+    }
+
+    .maps-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .map-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: rgba(0, 0, 0, .4);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .map-showcase img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .map-showcase:hover img {
+      transform: scale(1.05) rotateY(5deg);
+    }
+
+    .skill-stats {
+      padding: 40px;
+      text-align: center;
+    }
+
+    .skill-stats h2 {
+      color: var(--text);
+      margin-bottom: 30px;
+      font-size: 1.5rem;
+    }
+
+    .skill-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .skill-bar {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .skill-label {
+      width: 100px;
+      text-align: right;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .skill-progress {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, .1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+      border-radius: 10px;
+      transition: width 2s var(--ease);
+    }
+
+    .skill-value {
+      width: 50px;
+      color: var(--accent-3);
+      font-weight: 700;
+    }
+
+    /* ---------------- SETUP SECTION ---------------- */
+    .setup-section {
+      background: linear-gradient(135deg, rgba(255, 65, 108, .03), rgba(123, 92, 255, .03));
+    }
+
+    .setup-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    .setup-category {
+      background: rgba(0, 0, 0, .2);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .category-title {
+      font-size: 2rem;
+      color: var(--text);
+      margin-bottom: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hardware-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 30px;
+    }
+
+    .hardware-card {
+      background: rgba(0, 0, 0, .4);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .1);
+      transition: all var(--dur) var(--ease);
+    }
+
+    .hardware-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: var(--shadow-lg), 0 0 40px rgba(123, 92, 255, .3);
+      animation: shake3D 0.8s ease-in-out infinite;
+    }
+
+    @keyframes shake3D {
+
+      0%,
+      100% {
+        transform: translateY(-10px) scale(1.03);
+      }
+
+      25% {
+        transform: translateY(-12px) scale(1.04) translateX(2px);
+      }
+
+      75% {
+        transform: translateY(-8px) scale(1.02) translateX(-2px);
+      }
+    }
+
+    .hardware-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .hardware-info {
+      padding: 20px;
+    }
+
+    .hardware-info h3 {
+      color: var(--text);
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .hardware-info p {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .keyboard-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .main-keyboard {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+      align-items: center;
+      padding: 30px;
+    }
+
+    .main-keyboard img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+    }
+
+    .keyboard-details h3 {
+      color: var(--text);
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .keyboard-details p {
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .secondary-keyboards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .keyboard-card {
+      background: rgba(0, 0, 0, .4);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      text-align: center;
+    }
+
+    .keyboard-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 15px;
+    }
+
+    .keyboard-card h4 {
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .keyboard-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .tablet-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .tablet-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+      padding: 30px;
+    }
+
+    .tablet-main img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+    }
+
+    .tablet-info h3 {
+      color: var(--text);
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .tablet-info p {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .tablet-achievement {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 255, 143, .1);
+      border-radius: 15px;
+      border: 1px solid rgba(0, 255, 143, .2);
+    }
+
+    .tablet-achievement h3 {
+      color: var(--accent-3);
+      margin-bottom: 10px;
+    }
+
+    /* ---------------- GAMES SECTION ---------------- */
+    .games-section {
+      background: linear-gradient(135deg, rgba(0, 255, 143, .03), rgba(255, 65, 108, .03));
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .game-card {
+      height: 400px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      transition: all var(--dur) var(--ease);
+      cursor: pointer;
+    }
+
+    .game-card:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: var(--shadow-lg), 0 0 50px rgba(123, 92, 255, .4);
+      animation: wave3D 1.5s ease-in-out infinite;
+    }
+
+    @keyframes wave3D {
+
+      0%,
+      100% {
+        transform: translateY(-15px) scale(1.05);
+      }
+
+      25% {
+        transform: translateY(-20px) scale(1.07);
+      }
+
+      75% {
+        transform: translateY(-10px) scale(1.03);
+      }
+    }
+
+    .game-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, .3), rgba(0, 0, 0, .7));
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 30px;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .game-card:hover .game-overlay {
+      background: linear-gradient(135deg, rgba(123, 92, 255, .4), rgba(255, 65, 108, .4));
+    }
+
+    .game-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 20px;
+      transition: all var(--dur) var(--ease);
+    }
+
+    .game-card:hover .game-icon {
+      transform: scale(1.2) rotateY(180deg);
+    }
+
+    .game-title {
+      color: var(--text);
+      font-weight: 700;
+      text-align: center;
+      font-size: 1.1rem;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, .8);
+    }
+
+    .games-footer {
+      text-align: center;
+    }
+
+    .games-footer>p {
+      color: var(--muted);
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .champion-banner {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 40px;
+    }
+
+    .champion-banner img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    .banner-text {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, .4), rgba(0, 0, 0, .7));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .banner-text h2 {
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      margin-bottom: 20px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, .8);
+    }
+
+    .banner-text p {
+      color: var(--accent-3);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* ---------------- RESPONSIVE DESIGN ---------------- */
+    @media (max-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .team-grid {
+        gap: 15px;
+      }
+
+      .team-card {
+        flex: 0 0 220px;
+        min-width: 220px;
+      }
+
+      .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        gap: 20px;
+      }
+
+      .achievement-card:nth-child(4),
+      .achievement-card:nth-child(5) {
+        grid-column: auto;
+        justify-self: center;
+        margin: 0;
+      }
+
+      .medals-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .mods-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .maps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hardware-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .main-keyboard {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .tablet-main {
+        grid-template-columns: 1fr;
+      }
+
+      .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .nav-item {
+        padding: 0 15px;
+        font-size: 14px;
+      }
+
+      .dynamic-header {
+        height: auto;
+        padding: 10px 0;
+      }
+
+      .sections-container {
+        margin-top: 60px;
+      }
+
+      .section {
+        padding: 40px 0;
+      }
+
+      .hero-image {
+        height: 400px;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .team-grid {
+        gap: 10px;
+      }
+
+      .team-card {
+        flex: 0 0 200px;
+        min-width: 200px;
+      }
+
+      .achievements-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 15px;
+      }
+
+      .achievement-card:nth-child(4),
+      .achievement-card:nth-child(5) {
+        grid-column: auto;
+        justify-self: center;
+        margin: 0;
+      }
+
+      .medals-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mods-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .secondary-keyboards {
+        grid-template-columns: 1fr;
+      }
+
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .skill-bar {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .skill-label {
+        width: auto;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-item {
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+      }
+
+      .mods-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .setup-category {
+        padding: 20px;
+      }
+
+      .main-keyboard {
+        padding: 20px;
+      }
+
+      .tablet-main {
+        padding: 20px;
+      }
+    }
+
+    /* ---------------- MODERN FOOTER ---------------- */
+    .modern-footer {
+      padding: 60px 0 40px;
+      background: linear-gradient(135deg, rgba(10, 10, 15, .9), rgba(15, 17, 21, .9));
+      border-top: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 40px;
+      align-items: center;
+      padding: 40px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .footer-brand img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+    }
+
+    .brand-info h3 {
+      color: var(--text);
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+
+    .brand-info p {
+      color: var(--accent-3);
+      font-weight: 600;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .link-group h4 {
+      color: var(--text);
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .link-group p {
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .footer-links {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ================= DYNAMIC HEADER ================= -->
+  <header class="dynamic-header">
+    <nav class="nav-container">
+      <div class="nav-item" data-section="hero">Profile</div>
+      <div class="nav-item" data-section="team">Team</div>
+      <div class="nav-item" data-section="achievements">Achievements</div>
+      <div class="nav-item" data-section="medals">Medals</div>
+      <div class="nav-item" data-section="maps">Maps</div>
+      <div class="nav-item" data-section="setup">Setup</div>
+      <div class="nav-item" data-section="games">Games</div>
+    </nav>
+  </header>
+
+  <!-- ================= SECTIONS CONTAINER ================= -->
+  <div class="sections-container">
+
+    <!-- ================= HERO SECTION ================= -->
+    <section id="hero" class="section hero-section visible">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-main">
+            <img src="backgroundmain.jpg" class="hero-image" alt="main background" />
+            <div class="hero-overlay">
+              <h1 class="hero-title">RpMDinhVNa9</h1>
+              <div class="badge">
+                <img src="Osu!_Logo_2016.svg.png" alt="osu" style="width:24px;height:24px;" />
+                Top 1 Nam Định • SSS Rank
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-stats glass">
+            <div class="stat-grid">
+              <div class="stat-item lift-3d">
+                <div class="stat-value">1,578</div>
+                <div class="stat-label">Global Rank</div>
+              </div>
+              <div class="stat-item lift-3d">
+                <div class="stat-value">273</div>
+                <div class="stat-label">Country Rank</div>
+              </div>
+              <div class="stat-item lift-3d">
+                <div class="stat-value">1</div>
+                <div class="stat-label">City Rank</div>
+              </div>
+              <div class="stat-item lift-3d">
+                <div class="stat-value">97.30%</div>
+                <div class="stat-label">Accuracy</div>
+              </div>
+              <div class="stat-item lift-3d">
+                <div class="stat-value">36,933</div>
+                <div class="stat-label">Play Count</div>
+              </div>
+              <div class="stat-item lift-3d">
+                <div class="stat-value">1,602</div>
+                <div class="stat-label">Max Combo</div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <ul>
-          <li class="lift">Global Ranking</li>
-          <li class="lift">Country Ranking</li>
-          <li class="lift">Top 1% Rating</li>
-          <li class="lift">Performance Point</li>
-          <li class="lift">Top Mappers</li>
-          <li class="lift">Rank peaking</li>
-          <li class="lift">Osu! to Valorant</li>
-        </ul>
-
-        <ul>
-          <li class="lift">World Settings</li>
-          <li class="lift">Shopping</li>
-          <li class="lift">Sign in</li>
-        </ul>
       </div>
-    </header>
+    </section>
 
-    <main class="container stack-24">
-      <!-- ================= HERO ================= -->
-      <section class="hero stack-24">
-        <img src="backgroundmain.jpg" class="eula reveal" alt="main background" />
+    <!-- ================= TEAM SECTION ================= -->
+    <section id="team" class="section team-section">
+      <div class="container">
+        <div class="section-header">
+          <h1 class="section-title">VIETNAM TEAM</h1>
+          <p class="section-subtitle">====DISTincTed====</p>
+        </div>
 
-        <div class="hero-meta">
-          
-          <div class="static glass lift reveal">
-            <p><span>Điểm Được Xếp Hạng</span><span>5.425.728.315</span></p>
-            <p><span>Độ Chính Xác</span><span>97,30%</span></p>
-            <p><span>Số lần chơi</span><span>36.933</span></p>
-            <p><span>Tổng điểm</span><span>34.233.516.246</span></p>
-            <p><span>Tổng Lần Bấm</span><span>6.528.884</span></p>
-            <p><span>Combo Cao Nhất</span><span>1.602</span></p>
-          </div>
-
-          <div class="ranked">
-            <div class="rankedS tilt-3d shine">
-              <h3>GLOBAL</h3>
-              <h1>1,578</h1>
-            </div>
-            <div class="rankedS tilt-3d shine">
-              <h3>COUNTRY</h3>
-              <h1>273</h1>
-            </div>
-            <div class="rankedS tilt-3d shine">
-              <h3>CITY</h3>
-              <h1>1</h1>
+        <div class="team-grid">
+          <div class="team-card" style="background-image:url('lucia1.jpg')">
+            <div class="team-card-content">
+              <h3 class="team-name">PhucTraNX6</h3>
+              <p class="team-role">Support Player</p>
             </div>
           </div>
-        </div>
-
-        <div class="names glass lift reveal">
-          <p class="name">RpMDinhVNa9 — <span style="color:#00ff8f">SSS</span> — Tống Xuân Định</p>
-        </div>
-      </section>
-
-      <!-- ================= TEAM ================= -->
-      <section class="team">
-        <h1>VIETNAM's TEAM</h1>
-        <h1 style="margin: 8px 0 24px; color: var(--muted)"><====DISTincTed====></h1>
-        <div class="players">
-          <div class="pls tilt-3d" style="background-image:url('lucia1.jpg')">PhucTraNX6</div>
-          <div class="pls tilt-3d" style="background-image:url('texas.jpg')">SieuPhanDong</div>
-          <div class="pls tilt-3d" style="background-image:url('elua.png')">RpMDinhVNa9</div>
-          <div class="pls tilt-3d" style="background-image:url('wolf.jpeg')">TreEmLaSo1</div>
-        </div>
-      </section>
-
-      <!-- ================= SEARCH / ROLES ================= -->
-      <section class="searching glass">
-        <h1>ROLES and WINNING TEAM</h1>
-        <table>
-          <tr>
-            <td class="tilt-3d"><img src="x (1).png" alt="x1" /> Corsace Openning Cup 2nd Place Winning Team</td>
-          </tr>
-          <tr>
-            <td class="tilt-3d"><img src="x (2).png" alt="x2" /> BuddlyBQT 2021 osu!Party Winning Team</td>
-          </tr>
-          <tr>
-            <td class="tilt-3d"><img src="x (3).png" alt="x3" /> Perennial osu!standard 2rd Place</td>
-          </tr>
-          <tr>
-            <td class="tilt-3d"><img src="x (4).png" alt="x4" /> Osu! World Cup 2021 2rd Place (VIETNAM)</td>
-          </tr>
-          <tr>
-            <td class="tilt-3d"><img src="x (5).png" alt="x5" /> Osu! World Cup 2022 3rd Place (VIETNAM)</td>
-          </tr>
-        </table>
-      </section>
-
-      <!-- ================= MEDALS + MODS ================= -->
-      <section class="point">
-        <h2 class="section-title">MEDAL ARCHIVED FROM 11/2021</h2>
-        <div class="medal">
-          <div class="topmedal shine tilt-3d">
-            <p><img src="osu-combo-2000.png" alt="combo2000" /></p>
-            <h2>2000 Combo</h2>
-            <h3>5/2021</h3>
-            <p>MAX COMBO</p>
-            <p>Nothing can stop you now</p>
-          </div>
-          <div class="topmedal shine tilt-3d">
-            <p><img src="osu-skill-fc-8.png" alt="fc8" /></p>
-            <h2>Full combo 8 stars</h2>
-            <h3>2/2022</h3>
-            <p>ABERRATION</p>
-            <p>They said it couldn't be done. They were wrong.</p>
-          </div>
-          <div class="topmedal shine tilt-3d">
-            <p><img src="all-skill-highranker-4.png" alt="top1k" /></p>
-            <h2>Top 1,000 Global</h2>
-            <h3>8/2023</h3>
-            <p>APPOARCHING THE SUMMIT</p>
-            <p>Pro tier. Welcome to the top 1,000!</p>
-          </div>
-        </div>
-
-        <h2 class="section-title" style="margin-top:32px">MOST USED MODS FOR RANKED MAPS (PERFORMANCE POINT)</h2>
-        <div class="mods">
-          <div class="topmods tilt-3d">
-            <p><img src="selection-mod-hardrock.png" alt="hr" /></p>
-            <h1>27%</h1>
-            <p>HARD ROCK x1,06</p>
-          </div>
-          <div class="topmods tilt-3d">
-            <p><img src="selection-mod-hidden.png" alt="hd" /></p>
-            <h1>40%</h1>
-            <p>HIDDEN x1,06</p>
-          </div>
-          <div class="topmods tilt-3d">
-            <p><img src="selection-mod-doubletime.png" alt="dt" /></p>
-            <h1>92%</h1>
-            <p>DOUBLE TIME x1,12</p>
-          </div>
-          <div class="topmods tilt-3d">
-            <p><img src="selection-mod-nightcore.png" alt="nc" /></p>
-            <h1>86%</h1>
-            <p>NIGHTCORE x1,12</p>
-          </div>
-          <div class="topmods tilt-3d">
-            <p><img src="selection-mod-fadein.png" alt="fl" /></p>
-            <h1>9%</h1>
-            <p>FLASHLIGHT x1,06</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= MAPS ================= -->
-      <section class="maps">
-        <h1 style="text-align:center">MAPS</h1>
-        <div class="mapart">
-          <div class="allmaps shine tilt-3d">
-            <img src="Ảnh chụp màn hình 2024-11-11 215942.png" alt="m1" />
-            <img src="3nd.png" alt="m1-2" />
-          </div>
-          <div class="artist shine tilt-3d">
-            <h1 style="color:#ffffff">KHẢ NĂNG ĐIỀU KHIỂN MAP  MAX FORCUSING</h1>
-            <p class="jss">JUMPS : 62%</p>
-            <p class="jss">STREAM : 35%</p>
-            <p class="jss">DEATHSTREAM : 3%</p>
-          </div>
-          <div class="allmaps shine tilt-3d">
-            <img src="Ảnh chụp màn hình 2024-11-11 220000.png" alt="m2" />
-            <img src="4nd.png" alt="m2-2" />
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= LAPTOP + MONITOR ================= -->
-      <section class="lapmon">
-        <div class="laptop shine tilt-3d">
-          <img src="mon1.jpg" alt="laptop" />
-          <p style="padding:12px 14px">GIGABYTE - Laptop Gamming</p>
-        </div>
-        <div class="monitor shine tilt-3d">
-          <img src="mon2.jpg" alt="monitor" />
-          <p style="padding:12px 14px">360HZ gaming monitor</p>
-        </div>
-      </section>
-
-      <!-- ================= KEYBOARD ================= -->
-      <section class="keyboard">
-        <h1>BEST AND MOST USED KEYBOARD</h1>
-        <div class="info">
-          <img class="wobble" src="Remove-bg.ai_1731176520199.png" alt="v87pro" />
-          <div class="glass stack-16" style="padding:18px">
-            <p>Bàn phím V87 Pro là một bàn phím cơ dạng tenkeyless (TKL), thiết kế nhỏ gọn, chắc chắn, phù hợp cho những ai thích sự tiện dụng và di chuyển. Với các switch cơ học từ Cherry, Gateron, hoặc Outemu, V87 Pro mang đến cảm giác gõ phong phú và bền bỉ. Bàn phím có đèn nền LED tùy chỉnh, hỗ trợ kết nối không dây hoặc USB Type-C, cùng với keycap PBT cao cấp chống mài mòn. Ngoài ra, tính năng tùy chỉnh phím và macro giúp người dùng cá nhân hóa trải nghiệm sử dụng.</p>
-            <span class="badge">MECHANICAL EXPERT KEYBOARD FOR OSU!</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="keyboard" style="padding-top: 0">
-        <h1 style="color:#e9e9f1">LOW END KEYBOARD</h1>
-        <div class="lowkb">
-          <div class="kb1 tilt-3d">
-            <img src="Remove-bg.ai_1731178228084.png" alt="k82" />
-            <p style="padding-top:16px">Bàn phím giả cơ XUNFOX K82 là bàn phím gaming có dây, với thiết kế công thái học thoải mái, chất liệu ABS bền bỉ và cấu trúc 6 lớp chắc chắn. Bàn phím trang bị 94 phím, có độ bền cao và tính năng Antighosting hỗ trợ khi chơi game. Kết nối USB 3.0, tương thích với nhiều hệ điều hành, cùng đèn LED 7 màu và núm xoay âm lượng tiện lợi, tạo trải nghiệm tốt cho game thủ, đặc biệt trong môi trường thiếu sáng. Nhưng rác.</p>
-          </div>
-          <div class="kb2 tilt-3d">
-            <img src="Remove-bg.ai_1731178563105.png" alt="k620" />
-            <span style="display:block; padding-top:16px; font-size:18px">(lỗi)Bàn phím cơ LEAVEN K620 là dòng bàn phím siêu nhẹ và bền với trọng lượng chỉ 380 gram và thiết kế 61 phím nhỏ gọn, tiện lợi. Có nhiều màu sắc như đen, trắng, hồng, và xanh, bàn phím sử dụng trục xanh lá cây cho cảm giác gõ sống động và độ bền cao. Keycap từ chất liệu ABS chống dầu và dấu vân tay, cùng hiệu ứng RGB đầy màu sắc với phím chuyển đổi FN + INS. Kết nối USB 3.2 plug-and-play, không cần cài đặt, chân ẩn điều chỉnh độ nghiêng, phù hợp cho game, văn phòng và các môi trường tập thể như câu lạc bộ thể thao điện tử.</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= TABLET ================= -->
-      <section class="tablet">
-        <h1>BEST TABLET - VEIKK 480 PRO</h1>
-        <div class="tbinfo">
-          <img class="tilt-3d" src="tabletV.png" alt="tablet" />
-          <p>Bảng vẽ tốt nhất được thiết kế riêng cho speed player, có khả năng vuốt bút cực nhạy, SENS cực kỳ thích hợp khi HDDT hay HDDTHR, Đây là một màn hình vẽ với kích thước 15.6 inch, rất được yêu thích trong cộng đồng game thủ osu!. Với độ nhạy 8192 mức, và tính năng cảm ứng đa điểm, Gaomon PD1560 mang lại trải nghiệm mượt mà cho người chơi.</p>
-          <img class="tilt-3d" src="tbsetting.png" alt="tbsetting" />
-        </div>
-        <p style="margin-top: 20px">SETTING THẾ GIỚI của <span style="color:#00ff8f; font-weight:700">TOP 1</span> NAM DINH</p>
-      </section>
-
-      <!-- ================= COUNT / BANNER ================= -->
-      <section class="count">
-        <h1>TOP <span style="color:#00ff8f">1</span> OSU! STANDARD IN <span style="color:#00ff8f">NAM DINH</span> 2022-2023</h1>
-        <h2 style="margin-top:6px; color:#a7f3ce;">RpMDinhVNa9 — Đổi tên lần cuối: 21/10/2022</h2>
-        <img src="6nd.png" alt="banner" />
-      </section>
-
-      <!-- ================= REGISTER ================= -->
-      <section class="register-form">
-        <div class="form">
-          <h1 style="text-align:center; margin-bottom:16px">ĐĂNG KÝ SOLO TOP 1</h1>
-          <form action="#">
-            <div class="form-row">
-              <label for="fullName">NAME</label>
-              <input type="text" id="fullName" name="fullName" required />
-            </div>
-            <div class="form-row">
-              <label for="inGameName">NAME_INGAME</label>
-              <input type="text" id="inGameName" name="inGameName" required />
-            </div>
-            <div class="form-row">
-              <label for="password">PASSWORDS</label>
-              <input type="password" id="password" name="password" required />
-            </div>
-            <button class="btn" type="submit">Đăng Ký</button>
-          </form>
-        </div>
-      </section>
-
-      <!-- ================= OTHER GAMES ================= -->
-      <section class="game">
-        <h1 style="padding-bottom: 12px">NGOÀI OSU! THÌ CÒN 6 GAME KHÁC...</h1>
-        <div class="anothergame">
-          <div class="gms tilt-3d">
-            <div class="games">
-              <div class="image" style="background-image:url('ic1.png')"></div>
-              <span>ARKNIGHTS</span>
+          <div class="team-card" style="background-image:url('texas.jpg')">
+            <div class="team-card-content">
+              <h3 class="team-name">SieuPhanDong</h3>
+              <p class="team-role">Speed Player</p>
             </div>
           </div>
-          <div class="gms tilt-3d">
-            <div class="games">
-              <div class="image" style="background-image:url('ic2.png')"></div>
-              <span>WUTHERING WAVES</span>
+          <div class="team-card" style="background-image:url('elua.png')">
+            <div class="team-card-content">
+              <h3 class="team-name">RpMDinhVNa9</h3>
+              <p class="team-role">Team Leader</p>
             </div>
           </div>
-          <div class="gms tilt-3d">
-            <div class="games">
-              <div class="image" style="background-image:url('ic3.webp')"></div>
-              <span>PHIGROS</span>
-            </div>
-          </div>
-          <div class="gms tilt-3d">
-            <div class="games">
-              <div class="image" style="background-image:url('ic4.png')"></div>
-              <span>FORZA HORIZON 4</span>
-            </div>
-          </div>
-          <div class="gms tilt-3d">
-            <div class="games">
-              <div class="image" style="background-image:url('ic5.jpg')"></div>
-              <span>CYBERFUNK 2077 DLC</span>
-            </div>
-          </div>
-          <div class="gms tilt-3d">
-            <div class="games">
-              <div class="image" style="background-image:url('ic6.png')"></div>
-              <span>STRINOVA</span>
+          <div class="team-card" style="background-image:url('wolf.jpeg')">
+            <div class="team-card-content">
+              <h3 class="team-name">TreEmLaSo1</h3>
+              <p class="team-role">Precision Player</p>
             </div>
           </div>
         </div>
-        <p style="padding: 20px 0; color: var(--muted)">Well...vừa top 1 vừa Wibu như thế này thì chắc vẫn còn cứu được</p>
-      </section>
-    </main>
-
-    <!-- ================= FOOTER ================= -->
-    <footer class="ending">
-      <div class="end">
-        <img src="Osu!_Logo_2016.svg.png" alt="osu logo" />
-        <span>
-          <p>Copyright to Tống Xuân Định</p>
-          <p>030705 - 0941****55</p>
-          <p>Yew York's Web Domain</p>
-        </span>
-        <span>
-          <p>Contact:</p>
-          <p>dinhtong343@gmail.com</p>
-          <p>https://osu.ppy.sh/250746</p>
-        </span>
       </div>
-    </footer>
-  </body>
+    </section>
+
+    <!-- ================= ACHIEVEMENTS SECTION ================= -->
+    <section id="achievements" class="section achievements-section">
+      <div class="container">
+        <div class="section-header">
+          <h1 class="section-title">ACHIEVEMENTS</h1>
+          <p class="section-subtitle">Tournament Victories & Major Accomplishments</p>
+        </div>
+
+        <div class="achievements-grid">
+          <div class="achievement-card tilt-extreme">
+            <img src="x (1).png" alt="x1" class="achievement-image" />
+            <div class="achievement-content">
+              <h3 class="achievement-title">Corsace Opening Cup</h3>
+              <p class="achievement-desc">2nd Place Winning Team - Elite tournament performance</p>
+            </div>
+          </div>
+          <div class="achievement-card tilt-extreme">
+            <img src="x (2).png" alt="x2" class="achievement-image" />
+            <div class="achievement-content">
+              <h3 class="achievement-title">BuddlyBQT 2021</h3>
+              <p class="achievement-desc">osu!Party Winning Team - Community championship victory</p>
+            </div>
+          </div>
+          <div class="achievement-card tilt-extreme">
+            <img src="x (3).png" alt="x3" class="achievement-image" />
+            <div class="achievement-content">
+              <h3 class="achievement-title">Perennial osu!standard</h3>
+              <p class="achievement-desc">2nd Place - Consistent high-level performance</p>
+            </div>
+          </div>
+          <div class="achievement-card tilt-extreme">
+            <img src="x (4).png" alt="x4" class="achievement-image" />
+            <div class="achievement-content">
+              <h3 class="achievement-title">Osu! World Cup 2021</h3>
+              <p class="achievement-desc">2nd Place (VIETNAM) - International recognition</p>
+            </div>
+          </div>
+          <div class="achievement-card tilt-extreme">
+            <img src="x (5).png" alt="x5" class="achievement-image" />
+            <div class="achievement-content">
+              <h3 class="achievement-title">Osu! World Cup 2022</h3>
+              <p class="achievement-desc">3rd Place (VIETNAM) - Continued excellence</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MEDALS SECTION ================= -->
+    <section id="medals" class="section medals-section">
+      <div class="container">
+        <div class="medals-container">
+          <div>
+            <div class="section-header">
+              <h1 class="section-title">MEDALS</h1>
+              <p class="section-subtitle">Archived from 11/2021</p>
+            </div>
+
+            <div class="medals-grid">
+              <div class="medal-card">
+                <img src="osu-combo-2000.png" alt="combo2000" />
+                <h3 class="medal-title">2000 Combo</h3>
+                <p class="medal-date">5/2021</p>
+                <p class="medal-desc">MAX COMBO - Nothing can stop you now</p>
+              </div>
+              <div class="medal-card">
+                <img src="osu-skill-fc-8.png" alt="fc8" />
+                <h3 class="medal-title">Full Combo 8 Stars</h3>
+                <p class="medal-date">2/2022</p>
+                <p class="medal-desc">ABERRATION - They said it couldn't be done. They were wrong.</p>
+              </div>
+              <div class="medal-card">
+                <img src="all-skill-highranker-4.png" alt="top1k" />
+                <h3 class="medal-title">Top 1,000 Global</h3>
+                <p class="medal-date">8/2023</p>
+                <p class="medal-desc">APPROACHING THE SUMMIT - Pro tier. Welcome to the top 1,000!</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-header">
+              <h2 class="section-title" style="font-size:2rem;">MODS USAGE</h2>
+              <p class="section-subtitle">Most Used Mods for Ranked Maps</p>
+            </div>
+
+            <div class="mods-grid">
+              <div class="mod-card">
+                <img src="selection-mod-hardrock.png" alt="hr" />
+                <div class="mod-percentage">27%</div>
+                <p class="mod-name">HARD ROCK x1.06</p>
+              </div>
+              <div class="mod-card">
+                <img src="selection-mod-hidden.png" alt="hd" />
+                <div class="mod-percentage">40%</div>
+                <p class="mod-name">HIDDEN x1.06</p>
+              </div>
+              <div class="mod-card">
+                <img src="selection-mod-doubletime.png" alt="dt" />
+                <div class="mod-percentage">92%</div>
+                <p class="mod-name">DOUBLE TIME x1.12</p>
+              </div>
+              <div class="mod-card">
+                <img src="selection-mod-nightcore.png" alt="nc" />
+                <div class="mod-percentage">86%</div>
+                <p class="mod-name">NIGHTCORE x1.12</p>
+              </div>
+              <div class="mod-card">
+                <img src="selection-mod-fadein.png" alt="fl" />
+                <div class="mod-percentage">9%</div>
+                <p class="mod-name">FLASHLIGHT x1.06</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MAPS SECTION ================= -->
+    <section id="maps" class="section maps-section">
+      <div class="container">
+        <div class="section-header">
+          <h1 class="section-title">MAPS</h1>
+          <p class="section-subtitle">Skill Control & Map Mastery</p>
+        </div>
+
+        <div class="maps-container">
+          <div class="maps-grid">
+            <div class="map-showcase tilt-extreme">
+              <img src="Ảnh chụp màn hình 2024-11-11 215942.png" alt="map1" />
+              <img src="3nd.png" alt="map1-detail" />
+            </div>
+
+            <div class="skill-stats glass">
+              <h2>MAP CONTROL ABILITIES</h2>
+              <div class="skill-bars">
+                <div class="skill-bar">
+                  <span class="skill-label">JUMPS</span>
+                  <div class="skill-progress">
+                    <div class="skill-fill" style="width: 62%"></div>
+                  </div>
+                  <span class="skill-value">62%</span>
+                </div>
+                <div class="skill-bar">
+                  <span class="skill-label">STREAM</span>
+                  <div class="skill-progress">
+                    <div class="skill-fill" style="width: 35%"></div>
+                  </div>
+                  <span class="skill-value">35%</span>
+                </div>
+                <div class="skill-bar">
+                  <span class="skill-label">DEATHSTREAM</span>
+                  <div class="skill-progress">
+                    <div class="skill-fill" style="width: 3%"></div>
+                  </div>
+                  <span class="skill-value">3%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="map-showcase tilt-extreme">
+              <img src="Ảnh chụp màn hình 2024-11-11 220000.png" alt="map2" />
+              <img src="4nd.png" alt="map2-detail" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SETUP SECTION ================= -->
+    <section id="setup" class="section setup-section">
+      <div class="container">
+        <div class="section-header">
+          <h1 class="section-title">GAMING SETUP</h1>
+          <p class="section-subtitle">Professional Equipment & Configuration</p>
+        </div>
+
+        <div class="setup-grid">
+          <div class="setup-category">
+            <h2 class="category-title">DISPLAY & HARDWARE</h2>
+            <div class="hardware-grid">
+              <div class="hardware-card tilt-extreme">
+                <img src="mon1.jpg" alt="laptop" />
+                <div class="hardware-info">
+                  <h3>GIGABYTE Gaming Laptop</h3>
+                  <p>High-performance gaming laptop with advanced cooling system</p>
+                </div>
+              </div>
+              <div class="hardware-card tilt-extreme">
+                <img src="mon2.jpg" alt="monitor" />
+                <div class="hardware-info">
+                  <h3>360Hz Gaming Monitor</h3>
+                  <p>Ultra-fast refresh rate for competitive gaming</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="setup-category">
+            <h2 class="category-title">KEYBOARDS</h2>
+            <div class="keyboard-showcase">
+              <div class="main-keyboard glass">
+                <img src="Remove-bg.ai_1731176520199.png" alt="v87pro" />
+                <div class="keyboard-details">
+                  <h3>V87 Pro Mechanical Keyboard</h3>
+                  <p>Bàn phím cơ dạng tenkeyless (TKL), thiết kế nhỏ gọn, chắc chắn với các switch cơ học từ Cherry,
+                    Gateron, hoặc Outemu. Có đèn nền LED tùy chỉnh, hỗ trợ kết nối không dây hoặc USB Type-C, cùng với
+                    keycap PBT cao cấp chống mài mòn.</p>
+                  <div class="badge">MECHANICAL EXPERT KEYBOARD FOR OSU!</div>
+                </div>
+              </div>
+
+              <div class="secondary-keyboards">
+                <div class="keyboard-card tilt-extreme">
+                  <img src="Remove-bg.ai_1731178228084.png" alt="k82" />
+                  <h4>XUNFOX K82</h4>
+                  <p>Gaming keyboard với thiết kế công thái học, 94 phím, Antighosting và đèn LED 7 màu</p>
+                </div>
+                <div class="keyboard-card tilt-extreme">
+                  <img src="Remove-bg.ai_1731178563105.png" alt="k620" />
+                  <h4>LEAVEN K620</h4>
+                  <p>Bàn phím cơ siêu nhẹ 380g với 61 phím, RGB đầy màu sắc và kết nối USB 3.2</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="setup-category">
+            <h2 class="category-title">TABLET SETUP</h2>
+            <div class="tablet-showcase">
+              <div class="tablet-main glass">
+                <img src="tabletV.png" alt="tablet" />
+                <div class="tablet-info">
+                  <h3>VEIKK 480 PRO</h3>
+                  <p>Bảng vẽ tốt nhất được thiết kế riêng cho speed player, có khả năng vuốt bút cực nhạy, SENS cực kỳ
+                    thích hợp khi HDDT hay HDDTHR. Với độ nhạy 8192 mức và tính năng cảm ứng đa điểm.</p>
+                </div>
+                <img src="tbsetting.png" alt="tablet-settings" />
+              </div>
+              <div class="tablet-achievement">
+                <h3>WORLD SETTINGS</h3>
+                <p>Configuration của <span style="color:var(--accent-3); font-weight:700">TOP 1</span> NAM ĐỊNH</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GAMES SECTION ================= -->
+    <section id="games" class="section games-section">
+      <div class="container">
+        <div class="section-header">
+          <h1 class="section-title">OTHER GAMES</h1>
+          <p class="section-subtitle">Beyond osu! - 6 Additional Gaming Experiences</p>
+        </div>
+
+        <div class="games-grid">
+          <div class="game-card tilt-extreme" style="background-image:url('ww1.jpg')">
+            <div class="game-overlay">
+              <div class="game-icon" style="background-image:url('ic1.png')"></div>
+              <h3 class="game-title">ARKNIGHTS</h3>
+            </div>
+          </div>
+          <div class="game-card tilt-extreme" style="background-image:url('ww2.jpg')">
+            <div class="game-overlay">
+              <div class="game-icon" style="background-image:url('ic2.png')"></div>
+              <h3 class="game-title">WUTHERING WAVES</h3>
+            </div>
+          </div>
+          <div class="game-card tilt-extreme" style="background-image:url('ww3.jpg')">
+            <div class="game-overlay">
+              <div class="game-icon" style="background-image:url('ic3.webp')"></div>
+              <h3 class="game-title">PHIGROS</h3>
+            </div>
+          </div>
+          <div class="game-card tilt-extreme" style="background-image:url('ww4.jpg')">
+            <div class="game-overlay">
+              <div class="game-icon" style="background-image:url('ic4.png')"></div>
+              <h3 class="game-title">FORZA HORIZON 4</h3>
+            </div>
+          </div>
+          <div class="game-card tilt-extreme" style="background-image:url('ww5.jpg')">
+            <div class="game-overlay">
+              <div class="game-icon" style="background-image:url('ic5.jpg')"></div>
+              <h3 class="game-title">CYBERPUNK 2077 DLC</h3>
+            </div>
+          </div>
+          <div class="game-card tilt-extreme" style="background-image:url('ww6.webp')">
+            <div class="game-overlay">
+              <div class="game-icon" style="background-image:url('ic6.png')"></div>
+              <h3 class="game-title">STRINOVA</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="games-footer">
+          <p>Well...vừa top 1 vừa Wibu như thế này thì chắc vẫn còn cứu được</p>
+          <div class="champion-banner">
+            <img src="6nd.png" alt="champion-banner" />
+            <div class="banner-text">
+              <h2>TOP <span style="color:var(--accent-3)">1</span> OSU! STANDARD IN <span
+                  style="color:var(--accent-3)">NAM ĐỊNH</span></h2>
+              <p>RpMDinhVNa9 — Đổi tên lần cuối: 21/10/2022</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+      // Navigation functionality
+      const navItems = document.querySelectorAll('.nav-item');
+      const sections = document.querySelectorAll('.section');
+
+      // Set initial active states
+      navItems[0].classList.add('active');
+      sections[0].classList.add('active');
+
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const targetSection = item.getAttribute('data-section');
+
+          // Remove active classes
+          navItems.forEach(nav => nav.classList.remove('active'));
+          sections.forEach(section => {
+            section.classList.remove('active', 'visible');
+          });
+
+          // Add active class to clicked nav item
+          item.classList.add('active');
+
+          // Smooth scroll to target section
+          const target = document.getElementById(targetSection);
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+
+            setTimeout(() => {
+              target.classList.add('visible', 'active');
+            }, 100);
+          }
+        });
+      });
+
+      // Intersection Observer for scroll animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+
+      // Add floating animation to cards
+      const cards = document.querySelectorAll('.team-card, .achievement-card, .medal-card, .mod-card');
+      cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('float-animation');
+      });
+
+      // Parallax effect for hero image
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const heroImage = document.querySelector('.hero-image');
+        if (heroImage) {
+          heroImage.style.transform = `translateY(${scrolled * 0.3}px) scale(${1 + scrolled * 0.0001})`;
+        }
+      });
+
+      // Dynamic header background on scroll
+      const header = document.querySelector('.dynamic-header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+          header.style.background = 'rgba(10,10,15,.98)';
+          header.style.boxShadow = '0 10px 30px rgba(0,0,0,.3)';
+        } else {
+          header.style.background = 'rgba(10,10,15,.95)';
+          header.style.boxShadow = 'none';
+        }
+      });
+
+      // Add random rotation to floating elements
+      setInterval(() => {
+        const floatingElements = document.querySelectorAll('.float-animation');
+        floatingElements.forEach(element => {
+          const randomRotation = (Math.random() - 0.5) * 2;
+          element.style.transform += ` rotateZ(${randomRotation}deg)`;
+        });
+      }, 5000);
+
+      // Smooth scroll behavior
+      document.documentElement.style.scrollBehavior = 'smooth';
+
+      // Add glow effect on hover for interactive elements
+      const interactiveElements = document.querySelectorAll('.lift-3d, .tilt-extreme, .team-card, .achievement-card');
+      interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+          element.style.filter = 'drop-shadow(0 0 20px rgba(123,92,255,.4))';
+        });
+
+        element.addEventListener('mouseleave', () => {
+          element.style.filter = 'none';
+        });
+      });
+    </script>
+</body>
+
 </html>
-
